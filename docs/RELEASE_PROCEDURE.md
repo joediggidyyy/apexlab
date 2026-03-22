@@ -23,25 +23,23 @@ Within this workspace, `projects/apexlab/` is still present as a project lane in
 
 That means the following must be performed in the actual public `apexlab` repository context before release publication:
 
-- stage/commit the `ApexLab 1.0.0` contents there
 - create the release tag there
 - publish the package artifacts through the chosen release flow
 
 ## Operator release flow
 
 1. Move into the standalone local clone of the intended public `apexlab` repository.
-2. Copy or sync the validated `projects/apexlab/` package contents into that repository.
-3. Verify the repository remote points to `https://github.com/joediggidyyy/apexlab`.
-4. Run the package validation one more time in that standalone repo context:
+2. Verify the repository remote points to `https://github.com/joediggidyyy/apexlab`.
+3. Confirm the synced `ApexLab 1.0.0` package contents are present on `main`.
+4. Run the package validation one more time in that standalone repo context if desired:
    - `python -m pytest tests`
    - `python -m build`
 5. Confirm the final `dist/` contains only:
    - `apexlab-1.0.0-py3-none-any.whl`
    - `apexlab-1.0.0.tar.gz`
-6. Commit the release-ready state.
-7. Create the release tag `v1.0.0`.
-8. Push commits and tag to the intended public remote.
-9. Publish the artifacts via the selected release channel.
+6. Create the release tag `v1.0.0`.
+7. Push the tag to the intended public remote.
+8. Publish the artifacts via the selected release channel.
 
 ## Suggested release payload surfaces
 

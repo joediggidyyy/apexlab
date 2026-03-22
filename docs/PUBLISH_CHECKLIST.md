@@ -39,6 +39,7 @@ This checklist is the compact pre-publish lane for the initial `1.0.0` release.
 
 - [x] confirm release notes wording is final for the intended lean `1.0.0` release
 - [x] confirm repository remote/publish target is the intended public `apexlab` repository: `https://github.com/joediggidyyy/apexlab`
+- [x] sync the validated `1.0.0` package tree to the public `apexlab` repository
 - [ ] publish the tagged `1.0.0` release artifacts through the chosen release flow
 
 ## Current execution-context note
@@ -47,4 +48,5 @@ Verified from this workspace on 2026-03-22:
 
 - the intended public repository exists at `https://github.com/joediggidyyy/apexlab`
 - `projects/apexlab/` remains a package-track lane inside the `CodeSentinel-1` workspace rather than a standalone local clone
-- therefore the remaining tasks are repository sync, tagging, and release publication against the public `apexlab` repository
+- the validated ApexLab package tree has been synced to the public repository `main` branch
+- therefore the remaining tasks are release tagging and artifact publication
