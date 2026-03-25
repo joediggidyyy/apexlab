@@ -23,6 +23,20 @@ This document summarizes the currently implemented public ApexLab surfaces.
 	- `score_samples(x)` returns anomaly-oriented scores where higher values indicate more anomalous rows
 	- `predict(x)` returns binary anomaly labels using the fitted contamination threshold
 
+## `apexlab.models.decision_tree`
+
+- `DecisionTreeClassifier(max_depth=None, min_samples_split=2, max_features=None, random_state=None)`
+	- `fit(x, y)` trains a deterministic binary decision tree using Gini impurity
+	- `predict_proba(x)` returns per-row class probabilities as `[p_negative, p_positive]`
+	- `predict(x)` returns binary class predictions from the fitted tree
+
+## `apexlab.models.random_forest`
+
+- `RandomForestClassifier(n_estimators=100, max_depth=None, min_samples_split=2, max_features='sqrt', bootstrap=True, random_state=None)`
+	- `fit(x, y)` trains a deterministic binary random forest over decision-tree estimators
+	- `predict_proba(x)` returns mean class probabilities aggregated across the fitted trees
+	- `predict(x)` returns binary class predictions from the aggregated probabilities
+
 ## `apexlab.diagnostics.convergence`
 
 - `summarize_history(history, tolerance=None)`

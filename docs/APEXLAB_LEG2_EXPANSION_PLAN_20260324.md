@@ -1513,3 +1513,249 @@ Do not blend it with CLI train/evaluate work yet, and do not start F4 tree/rando
 1. build a minimal deterministic isolation forest
 2. prove score direction and ranking with tests
 3. only then decide how much of the internal tree machinery should be generalized for F4
+
+---
+
+## Frame 4 micro-plan — `models/decision_tree.py` + `models/random_forest.py`
+
+### Frame identity
+
+- frame lane: `F4`
+- frame class: supervised model-family expansion / sklearn replacement lane
+- primary objective: deliver ApexLab-owned decision-tree and random-forest classifiers with deterministic behavior and stable prediction surfaces
+- immediate driver: replace the remaining supervised-model dependency path before observer-side sklearn removal
+
+### Why F4 is now the correct next frame
+
+F3 closed the unsupervised anomaly-model gap with a working `IsolationForest`. The next unresolved model-family gap is supervised tree learning.
+
+At this point the ApexLab stack has:
+
+- comparison and regression analysis layers
+- CLI compare/report surfaces
+- structured reporting
+- an unsupervised anomaly model
+
+What it still lacks is a supervised tree ensemble that can serve the observer training lane. That makes F4 the correct successor frame.
+
+### Frame purpose
+
+Frame 4 delivers two linked model surfaces:
+
+1. a narrow, deterministic binary decision tree classifier
+2. a random forest classifier that aggregates those trees into stable probabilities and predictions
+
+The cleanest path is to implement the decision tree first, validate it, and then build the random forest on top of that stable tree machinery.
+
+### In-scope deliverables
+
+Files to create:
+
+- `src/apexlab/models/decision_tree.py`
+- `src/apexlab/models/random_forest.py`
+- `tests/test_decision_tree.py`
+- `tests/test_random_forest.py`
+
+Files to update:
+
+- `src/apexlab/models/__init__.py`
+- optionally `docs/API_OVERVIEW.md` if the new public model surfaces are documented in-frame
+
+Core public surfaces to implement:
+
+#### Decision tree
+
+- `DecisionTreeClassifier.__init__(...)`
+- `DecisionTreeClassifier.fit(x, y)`
+- `DecisionTreeClassifier.predict(x)`
+- `DecisionTreeClassifier.predict_proba(x)`
+
+#### Random forest
+
+- `RandomForestClassifier.__init__(...)`
+- `RandomForestClassifier.fit(x, y)`
+- `RandomForestClassifier.predict(x)`
+- `RandomForestClassifier.predict_proba(x)`
+
+Suggested constructor arguments for the first pass:
+
+- `max_depth`
+- `min_samples_split`
+- `random_state`
+- `n_estimators` (forest only)
+- `max_features` (forest only)
+- `bootstrap` (forest only, default true is reasonable)
+
+### Explicitly out of scope for F4
+
+- multiclass classification beyond what falls out trivially from binary handling
+- regression trees / random forest regression
+- pruning algorithms beyond simple stopping rules
+- feature-importance reporting
+- out-of-bag scoring
+- class weights
+- sparse matrix support
+- CLI train/evaluate integration in the same pass
+- observer callsite replacement in the same pass
+
+F4 should remain a model lane, not a full workflow lane.
+
+### Behavioral contract for F4
+
+#### Decision tree classifier
+
+Minimum expected behavior:
+
+- accepts 2D numeric feature input and 1D binary labels
+- learns recursive binary splits using Gini impurity
+- stores leaf probabilities based on class counts at leaves
+- returns deterministic predictions under fixed data / seed / stopping rules
+- returns `self` from `fit()`
+
+#### Random forest classifier
+
+Minimum expected behavior:
+
+- trains multiple bootstrapped decision trees
+- supports feature subsampling per split or per tree according to the chosen design
+- aggregates per-tree class probabilities into stable `predict_proba()` output
+- converts probabilities into deterministic class labels in `predict()`
+
+### Recommended implementation order
+
+#### Phase 1 — decision tree input discipline
+
+- validate `x` as a non-empty 2D numeric matrix
+- validate `y` as a non-empty 1D binary vector
+- reject row-count mismatch and non-binary labels
+
+#### Phase 2 — decision tree split logic
+
+- compute candidate splits from unique feature values or midpoints between sorted unique values
+- score splits by weighted Gini impurity
+- stop recursion on pure nodes, `max_depth`, or insufficient sample count
+- store leaf probability estimates from local class proportions
+
+#### Phase 3 — decision tree public inference surface
+
+- implement row-wise traversal for `predict_proba()`
+- derive `predict()` from class probability thresholding
+- ensure outputs are plain Python lists / serializable numerics where practical
+
+#### Phase 4 — random forest aggregation
+
+- bootstrap sample rows per estimator
+- optionally subsample features per split or per estimator using a deterministic RNG path
+- fit `n_estimators` decision trees
+- aggregate positive-class probability across trees
+
+#### Phase 5 — public export and documentation cleanup
+
+- export the new model classes from `src/apexlab/models/__init__.py`
+- optionally update `docs/API_OVERVIEW.md`
+
+### Data and probability expectations
+
+F4 does not need production-grade calibration. It does need sensible classification behavior.
+
+Acceptance emphasis should be on:
+
+- correct separation of a simple binary dataset
+- stable probability output shapes
+- deterministic behavior with fixed `random_state`
+- sensible majority/probability aggregation in the forest layer
+
+### Test matrix for `tests/test_decision_tree.py`
+
+Minimum cases:
+
+1. **fit returns self**
+	- confirms estimator-style behavior
+
+2. **simple binary dataset is separated correctly**
+	- verify the tree can classify an easy toy dataset
+
+3. **predict_proba returns valid probability rows**
+	- each row should sum to approximately `1.0`
+
+4. **invalid label rejection**
+	- reject non-binary `y`
+
+5. **invalid shape rejection**
+	- reject empty or row-mismatched inputs
+
+6. **depth/stopping behavior**
+	- confirm the model still returns predictions when restricted by stopping rules
+
+### Test matrix for `tests/test_random_forest.py`
+
+Minimum cases:
+
+1. **fit returns self**
+	- estimator-style workflow
+
+2. **predict_proba shape is stable**
+	- one probability row per sample
+
+3. **forest predicts simple binary fixture correctly**
+	- majority probability should separate the toy dataset
+
+4. **deterministic behavior under fixed seed**
+	- repeated fits with same seed should match
+
+5. **n_estimators / feature-subsampling behavior does not crash**
+	- sanity-check aggregation on small fixtures
+
+### Validation commands for the frame
+
+Primary validation target:
+
+- run `tests/test_decision_tree.py`
+- run `tests/test_random_forest.py`
+
+Secondary validation target:
+
+- run the full ApexLab suite after both supervised-model slices pass
+
+Optional confidence check:
+
+- run or add a tiny fixture that prints class probabilities for a toy dataset to confirm forest aggregation direction
+
+### Frame-opening checklist
+
+Before implementation starts:
+
+- confirm binary-only scope for the initial classifier pass
+- confirm whether `max_features` applies per split (recommended) or per tree in the first forest pass
+- confirm whether leaf probabilities should be stored as `[p_negative, p_positive]`
+- confirm whether API-doc updates belong in-frame or in the immediate cleanup pass
+
+### Main risks for F4
+
+| Risk | Why it matters | Mitigation |
+|---|---|---|
+| split-selection complexity | naive split enumeration can become buggy fast | start with tiny deterministic fixtures and straightforward midpoint splits |
+| probability-shape drift | downstream consumers need predictable output | test `predict_proba()` row shape and sum-to-one behavior explicitly |
+| random forest nondeterminism | bagging plus feature sampling can mask regressions | enforce fixed `random_state` in tests |
+| premature generalization | shared tree abstractions can bloat the frame | implement only what binary classification needs first |
+
+### Preferred exit state
+
+Frame 4 should end with:
+
+- a working `DecisionTreeClassifier`
+- a working `RandomForestClassifier`
+- deterministic toy-fixture classification behavior under fixed seed
+- stable `predict_proba()` outputs
+- full ApexLab suite still passing
+- a concise note of docs/code surfaces reviewed during the frame
+
+### ORACL-Prime recommendation
+
+Proceed with F4 as a staged supervised-model lane:
+
+1. implement and validate `DecisionTreeClassifier`
+2. reuse that foundation for `RandomForestClassifier`
+3. only after both pass should observer-side replacement planning begin
+
+That keeps the frame bite-sized, testable, and aligned with the remaining sklearn-removal objective.
