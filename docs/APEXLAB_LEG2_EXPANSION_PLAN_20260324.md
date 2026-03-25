@@ -1309,3 +1309,207 @@ Field-test evidence summary:
 - rerendered report artifacts were written successfully
 
 This leaves the next natural implementation lane as F3 unless packaging/final-doc polish is prioritized first.
+
+---
+
+## Frame 3 micro-plan — `models/isolation_forest.py`
+
+### Frame identity
+
+- frame lane: `F3`
+- frame class: model-family expansion / sklearn replacement lane
+- primary objective: deliver a usable unsupervised anomaly model inside ApexLab without introducing `scikit-learn`
+- immediate driver: start replacing the observer-side unsupervised model dependency with ApexLab-owned behavior
+
+### Why F3 is now the correct next frame
+
+The package and release lane are now healthy enough that the next high-value technical move is to resume the planned model-family expansion.
+
+The earlier analytical/reporting tranche is complete enough to support interpretation and reporting:
+
+- F1 completed the comparison layer
+- F2 completed the regression-analysis layer
+- F5-lite completed the first CLI slice
+- F6 completed the richer comparison/report rendering lane
+
+The next unresolved strategic gap is the unsupervised model surface. That makes F3 the right next frame before deeper observer integration.
+
+### Frame purpose
+
+Frame 3 delivers a lightweight Isolation Forest implementation under `src/apexlab/models/isolation_forest.py` with deterministic behavior, test coverage, and a public API that is narrow but useful.
+
+This frame should be practical rather than maximal. The goal is not full sklearn parity; the goal is a stable ApexLab-owned anomaly detector that can rank obvious outliers above inliers and support later observer-side integration.
+
+### In-scope deliverables
+
+Files to create:
+
+- `src/apexlab/models/isolation_forest.py`
+- `tests/test_isolation_forest.py`
+
+Files to update:
+
+- `src/apexlab/models/__init__.py`
+- optionally `docs/API_OVERVIEW.md` if the public model surface should be documented immediately in the same pass
+
+Core code surfaces to implement:
+
+- `IsolationForest.__init__(...)`
+- `IsolationForest.fit(x)`
+- `IsolationForest.score_samples(x)`
+- `IsolationForest.predict(x)`
+- any internal tree/node helpers needed to support deterministic random splits and path-length scoring
+
+Suggested constructor arguments for the first pass:
+
+- `n_estimators`
+- `max_samples`
+- `max_depth`
+- `random_state`
+- `contamination` or equivalent threshold parameter if prediction labels are included in-frame
+
+### Explicitly out of scope for F3
+
+- exact sklearn API parity
+- warm-start behavior
+- feature-importance reporting
+- sparse matrix support
+- joblib-based persistence
+- CLI train/evaluate wiring for isolation forest
+- observer callsite replacement in the same pass
+
+F3 should end with a correct model lane, not a sprawling platform lane.
+
+### Behavioral contract for F3
+
+Minimum expected model behavior:
+
+- accepts 2D numeric matrix-like input
+- fits a forest of randomized isolation trees
+- produces anomaly-oriented scores where obvious outliers sort above normal points
+- produces deterministic results under fixed `random_state`
+- returns `self` from `fit()`
+
+Recommended prediction contract:
+
+- `score_samples(x)` returns a numeric anomaly score per row
+- `predict(x)` returns binary anomaly/inlier labels using the configured threshold rule
+
+### Implementation strategy
+
+#### Phase 1 — input and configuration discipline
+
+- validate `x` as a non-empty 2D numeric matrix
+- normalize constructor defaults
+- define internal RNG handling from `random_state`
+
+#### Phase 2 — isolation tree mechanics
+
+- recursively sample one feature per split
+- choose a split uniformly between min and max observed values for that feature
+- stop recursion on empty/degenerate splits, singleton nodes, or `max_depth`
+- retain enough node metadata to compute path lengths later
+
+#### Phase 3 — forest aggregation
+
+- subsample rows per tree according to `max_samples`
+- build `n_estimators` trees
+- compute per-row mean path length across trees
+- convert mean path length into an anomaly-oriented score
+
+#### Phase 4 — public prediction surface
+
+- expose `score_samples(x)` using the aggregated forest state
+- expose `predict(x)` using a deterministic threshold strategy
+- ensure outputs are plain Python lists / serializable numerics where practical
+
+### Data and scoring expectations
+
+Frame 3 does not need perfect score calibration. It does need correct ranking behavior.
+
+The acceptance bar should focus on:
+
+- obvious outliers receiving stronger anomaly scores than clustered inliers
+- deterministic ordering on fixed-seed toy fixtures
+- stable handling of repeated values and narrow feature ranges
+
+The frame should prefer readable, documented scoring over clever but opaque math.
+
+### Test matrix for `tests/test_isolation_forest.py`
+
+Minimum cases:
+
+1. **fit returns self**
+	- confirms estimator-style workflow
+
+2. **score count matches row count**
+	- verify one anomaly score per input row
+
+3. **obvious outlier ranks above inliers**
+	- simple clustered points plus one distant point
+	- outlier should have the strongest anomaly score
+
+4. **predict returns deterministic labels under fixed seed**
+	- repeated run with same `random_state` should match exactly
+
+5. **invalid shape rejection**
+	- reject empty input
+	- reject ragged or non-numeric input
+
+6. **degenerate feature handling**
+	- identical or near-identical rows should not crash tree construction
+
+7. **max_samples handling**
+	- verify subsampling path does not exceed configured sample count
+
+### Validation commands for the frame
+
+Primary validation target:
+
+- run `tests/test_isolation_forest.py` first
+
+Secondary validation target:
+
+- run the full ApexLab suite after the model tests pass
+
+Optional confidence check:
+
+- add or run a tiny demo fixture to print ranked scores for clustered points plus one obvious outlier
+
+### Frame-opening checklist
+
+Before implementation starts:
+
+- confirm whether `predict()` should ship in F3 or be deferred until the threshold rule is finalized
+- confirm the desired score direction (`higher = more anomalous` is recommended)
+- confirm the public constructor arguments that should be treated as stable in the first pass
+- confirm whether immediate API-doc updates belong in-frame or in the following cleanup pass
+
+### Main risks for F3
+
+| Risk | Why it matters | Mitigation |
+|---|---|---|
+| score-direction confusion | downstream users can invert anomaly meaning easily | document and test score direction explicitly |
+| degenerate splits | narrow or repeated-value data can break naive recursion | stop early and handle zero-range features safely |
+| non-deterministic fixtures | random trees can mask regressions | enforce `random_state` in tests and use tiny controlled fixtures |
+| overreaching into F4 | tree helpers can tempt a shared full-tree framework too early | build only what isolation forest needs in F3 |
+
+### Preferred exit state
+
+Frame 3 should end with:
+
+- a working `IsolationForest` model in ApexLab
+- deterministic toy-fixture behavior under fixed seed
+- explicit tests proving outlier ranking and input validation
+- full ApexLab suite still passing
+- a concise note of docs/code surfaces reviewed during the frame
+
+### ORACL-Prime recommendation
+
+Proceed with F3 as a narrow, anomaly-model-only lane.
+
+Do not blend it with CLI train/evaluate work yet, and do not start F4 tree/random-forest generalization in the same frame. The cleanest next bite-sized advance is:
+
+1. build a minimal deterministic isolation forest
+2. prove score direction and ranking with tests
+3. only then decide how much of the internal tree machinery should be generalized for F4

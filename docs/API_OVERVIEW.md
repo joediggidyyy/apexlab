@@ -16,6 +16,13 @@ This document summarizes the currently implemented public ApexLab surfaces.
 	- `predict(x)` produces predictions after fitting
 	- `history` stores per-iteration mean-squared-error values
 
+## `apexlab.models.isolation_forest`
+
+- `IsolationForest(n_estimators=100, max_samples='auto', max_depth=None, random_state=None, contamination=0.1)`
+	- `fit(x)` trains a deterministic isolation forest under the configured seed
+	- `score_samples(x)` returns anomaly-oriented scores where higher values indicate more anomalous rows
+	- `predict(x)` returns binary anomaly labels using the fitted contamination threshold
+
 ## `apexlab.diagnostics.convergence`
 
 - `summarize_history(history, tolerance=None)`
