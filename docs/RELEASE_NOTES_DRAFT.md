@@ -1,5 +1,25 @@
 # ApexLab Release Notes Draft
 
+## 1.1.1
+
+`1.1.1` is a focused patch release that corrects the ApexLab CLI version surface after the `1.1.0` publish.
+
+### Fixed
+
+- added top-level CLI version flags:
+	- `apexlab --version`
+	- `apexlab -v`
+- added regression coverage so the CLI version surface is now explicitly tested
+
+### Validation status
+
+- targeted CLI regression tests passing
+- version-flag behavior verified from the patched package surface
+
+### Release note
+
+- this patch is intentionally narrow and exists to repair the published command-line UX without changing the broader `1.1.0` analytical/reporting surface
+
 ## 1.1.0
 
 `1.1.0` is the first post-initial ApexLab release: it keeps the package lean while adding the first Leg 2 analytical and reporting expansion required for public downstream consumption.

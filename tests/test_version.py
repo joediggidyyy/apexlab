@@ -5,7 +5,7 @@ import apexlab
 
 
 def test_package_root_exports_release_version_and_core_symbol() -> None:
-    assert apexlab.__version__ == "1.1.0"
+    assert apexlab.__version__ == "1.1.1"
     assert "ApexRegressor" in apexlab.__all__
 
 

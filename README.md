@@ -15,11 +15,11 @@ The current public package now spans a lean Leg 1 core plus the first Leg 2 anal
 
 The design goal is simple: ship a small, coherent toolkit first, then broaden it in later legs without dragging in a kitchen sink of dependencies. At the moment, `numpy` is the only non-stdlib runtime dependency.
 
-Current shipped-version target: `1.1.0`.
+Current shipped-version target: `1.1.1`.
 
 ## What ApexLab is for
 
-ApexLab 1.1.0 is aimed at small, reproducible ML workflows where you want lightweight numerical tooling without depending on a full framework stack. The current release is especially suited to:
+ApexLab 1.1.1 is aimed at small, reproducible ML workflows where you want lightweight numerical tooling without depending on a full framework stack. The current release is especially suited to:
 
 - constrained linear modeling experiments
 - distribution-comparison and effect-size review
@@ -40,9 +40,9 @@ For development from `projects/apexlab/`:
 
 For a release artifact install:
 
-- `pip install dist/apexlab-1.1.0-py3-none-any.whl`
+- `pip install dist/apexlab-1.1.1-py3-none-any.whl`
 
-The wheel and source distribution for `1.1.0` have now been build-verified and install smoke-tested locally.
+The wheel and source distribution for `1.1.1` should be treated as the active patch-release artifact lane.
 
 ## Quick start
 
@@ -85,17 +85,18 @@ Representative demo output includes:
 
 ## Dependency posture
 
-ApexLab currently avoids heavyweight ML frameworks. There is no `scikit-learn` runtime dependency in `1.1.0`.
+ApexLab currently avoids heavyweight ML frameworks. There is no `scikit-learn` runtime dependency in `1.1.1`.
 
 ## Release posture
 
-The `1.1.0` lane currently includes:
+The `1.1.1` lane currently includes:
 
 - passing focused test coverage
 - comparison, regression, CLI-lite, and reporting expansion surfaces
+- CLI version-flag support via `apexlab --version` and `apexlab -v`
 - reference validation against external baselines
 - confirmed field-test execution via `examples/evaluation_demo.py`
-- a clean active `dist/` containing only `1.1.0` artifacts
+- a release workflow that can skip already-published files during reruns
 
 ## More detail
 
@@ -103,5 +104,5 @@ The `1.1.0` lane currently includes:
 - `docs/API_OVERVIEW.md` — current public Leg 1 API overview
 - `docs/validation/REFERENCE_VALIDATION_20260324.md` — public validation summary for the current Leg 2 analytical lane
 - `docs/INITIAL_RELEASE_SCOPE.md` — release-shape summary
-- `docs/RELEASE_NOTES_DRAFT.md` — current release notes draft for `1.1.0`
+- `docs/RELEASE_NOTES_DRAFT.md` — current release notes draft for `1.1.1`
 - `docs/PUBLISH_CHECKLIST.md` — compact pre-publish checklist
