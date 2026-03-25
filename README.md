@@ -105,9 +105,7 @@ The `1.2.0` lane currently includes:
 
 ## More detail
 
-- `docs/APEXLAB_TOOLKIT_AUTHORITATIVE_SCHEMATIC.md` — authoritative package definitions
-- `docs/API_OVERVIEW.md` — current public Leg 1 API overview
-- `docs/validation/REFERENCE_VALIDATION_20260324.md` — public validation summary for the current Leg 2 analytical lane
-- `docs/INITIAL_RELEASE_SCOPE.md` — release-shape summary
-- `docs/RELEASE_NOTES_DRAFT.md` — current release notes draft for `1.2.0`
-- `docs/PUBLISH_CHECKLIST.md` — compact pre-publish checklist
+- `examples/reference_validation_run.py` — canonical external reference-validation runner for the current Leg 2 analytical lane
+- `examples/evaluation_demo.py` — canonical field-test surface for the current package lane
+- `tests/` — focused package validation surfaces
+- `src/apexlab/` — current public implementation surface
