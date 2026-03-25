@@ -2,11 +2,13 @@
 
 ApexLab is a lean standalone Python package for practical machine-learning utilities.
 
-The current public package now spans a lean Leg 1 core plus the first Leg 2 analysis/reporting expansion. ApexLab currently focuses on:
+The current public package now spans a lean Leg 1 core plus an expanded Leg 2 analysis/model/reporting lane. ApexLab currently focuses on:
 
 - simplex-constrained regression via `ApexRegressor`
 - statistical comparison helpers (`Mann-Whitney U`, `KS two-sample`, `Welch t-test`, `Cohen's d`)
 - lightweight OLS and binary logistic regression helpers
+- deterministic anomaly detection via `IsolationForest`
+- supervised binary classification via `DecisionTreeClassifier` and `RandomForestClassifier`
 - deterministic dataset splitting with optional stratification
 - regression and classification metrics
 - threshold selection and anomaly-style score evaluation
@@ -15,15 +17,17 @@ The current public package now spans a lean Leg 1 core plus the first Leg 2 anal
 
 The design goal is simple: ship a small, coherent toolkit first, then broaden it in later legs without dragging in a kitchen sink of dependencies. At the moment, `numpy` is the only non-stdlib runtime dependency.
 
-Current shipped-version target: `1.1.1`.
+Current shipped-version target: `1.2.0`.
 
 ## What ApexLab is for
 
-ApexLab 1.1.1 is aimed at small, reproducible ML workflows where you want lightweight numerical tooling without depending on a full framework stack. The current release is especially suited to:
+ApexLab 1.2.0 is aimed at small, reproducible ML workflows where you want lightweight numerical tooling without depending on a full framework stack. The current release is especially suited to:
 
 - constrained linear modeling experiments
 - distribution-comparison and effect-size review
 - lightweight explanatory regression analysis
+- anomaly-oriented score review with a package-owned isolation forest
+- deterministic supervised classification experiments using package-owned tree and forest models
 - deterministic train/test split generation
 - compact evaluation and reporting flows
 - threshold-based score review for anomaly-style or binary decisions
@@ -40,9 +44,9 @@ For development from `projects/apexlab/`:
 
 For a release artifact install:
 
-- `pip install dist/apexlab-1.1.1-py3-none-any.whl`
+- `pip install dist/apexlab-1.2.0-py3-none-any.whl`
 
-The wheel and source distribution for `1.1.1` should be treated as the active patch-release artifact lane.
+The wheel and source distribution for `1.2.0` should be treated as the active release artifact lane.
 
 ## Quick start
 
@@ -85,14 +89,15 @@ Representative demo output includes:
 
 ## Dependency posture
 
-ApexLab currently avoids heavyweight ML frameworks. There is no `scikit-learn` runtime dependency in `1.1.1`.
+ApexLab currently avoids heavyweight ML frameworks. There is no `scikit-learn` runtime dependency in `1.2.0`.
 
 ## Release posture
 
-The `1.1.1` lane currently includes:
+The `1.2.0` lane currently includes:
 
 - passing focused test coverage
 - comparison, regression, CLI-lite, and reporting expansion surfaces
+- package-owned `IsolationForest`, `DecisionTreeClassifier`, and `RandomForestClassifier` surfaces
 - CLI version-flag support via `apexlab --version` and `apexlab -v`
 - reference validation against external baselines
 - confirmed field-test execution via `examples/evaluation_demo.py`
@@ -104,5 +109,5 @@ The `1.1.1` lane currently includes:
 - `docs/API_OVERVIEW.md` — current public Leg 1 API overview
 - `docs/validation/REFERENCE_VALIDATION_20260324.md` — public validation summary for the current Leg 2 analytical lane
 - `docs/INITIAL_RELEASE_SCOPE.md` — release-shape summary
-- `docs/RELEASE_NOTES_DRAFT.md` — current release notes draft for `1.1.1`
+- `docs/RELEASE_NOTES_DRAFT.md` — current release notes draft for `1.2.0`
 - `docs/PUBLISH_CHECKLIST.md` — compact pre-publish checklist
