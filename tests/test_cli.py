@@ -10,6 +10,8 @@ SRC = Path(__file__).resolve().parents[1] / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
+import apexlab
+
 cli_main = importlib.import_module("apexlab.cli").main
 
 
@@ -19,6 +21,15 @@ def test_cli_help_renders_cleanly(capsys: pytest.CaptureFixture[str]) -> None:
     assert exit_code == 1
     assert "ApexLab command-line toolkit" in captured.out
     assert "compare" in captured.out
+
+
+@pytest.mark.parametrize("flag", ["--version", "-v"])
+def test_cli_version_flags_render_package_version(flag: str, capsys: pytest.CaptureFixture[str]) -> None:
+    with pytest.raises(SystemExit) as exc_info:
+        cli_main([flag])
+    captured = capsys.readouterr()
+    assert exc_info.value.code == 0
+    assert captured.out.strip() == f"apexlab {apexlab.__version__}"
 
 
 def test_compare_command_writes_report_bundle(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:

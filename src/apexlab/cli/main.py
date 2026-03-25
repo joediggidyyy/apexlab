@@ -5,12 +5,15 @@ from __future__ import annotations
 import argparse
 from typing import Sequence
 
+from apexlab import __version__
+
 from .compare import add_compare_subparser
 from .report import add_report_subparser
 
 
 def build_parser() -> argparse.ArgumentParser:
 	parser = argparse.ArgumentParser(prog="apexlab", description="ApexLab command-line toolkit")
+	parser.add_argument("-v", "--version", action="version", version=f"%(prog)s {__version__}")
 	subparsers = parser.add_subparsers(dest="command")
 	add_compare_subparser(subparsers)
 	add_report_subparser(subparsers)
