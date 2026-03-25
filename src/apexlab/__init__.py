@@ -1,6 +1,7 @@
 """ApexLab package root."""
 
+from apexlab import analysis
 from apexlab.models.simplex import ApexRegressor
 
-__all__ = ["ApexRegressor"]
-__version__ = "1.0.0"
+__all__ = ["ApexRegressor", "analysis"]
+__version__ = "1.1.0"

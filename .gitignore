@@ -4,6 +4,7 @@ __pycache__/
 .venv/
 .venv-core/
 .agent_session/
+.env
 build/
 dist/
 logs/

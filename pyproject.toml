@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "apexlab"
-version = "1.0.0"
+version = "1.1.0"
 description = "ApexLab machine learning toolkit"
 readme = "README.md"
 requires-python = ">=3.8"
@@ -15,6 +15,9 @@ authors = [
 dependencies = [
   "numpy>=1.23"
 ]
+
+[project.scripts]
+apexlab = "apexlab.cli.main:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

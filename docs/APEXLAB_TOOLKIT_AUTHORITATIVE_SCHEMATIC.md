@@ -124,7 +124,7 @@ The following rules are in force:
 | Minimum supported Python version | UNSPECIFIED | no definition in force |
 | Dependency policy | UNSPECIFIED | no definition in force |
 | Versioning policy | UNSPECIFIED | no definition in force |
-| CLI surface | UNSPECIFIED | no definition in force |
+| CLI surface | DEFINED | `apexlab` console entry point with lite `compare` and `report` commands under `src/apexlab/cli/` |
 | Public API boundary | UNSPECIFIED | no definition in force |
 | Model family inventory | UNSPECIFIED | no definition in force |
 | Interoperability contract with CodeSentinel | UNSPECIFIED | no definition in force |
@@ -167,6 +167,11 @@ projects/apexlab/
 ├─ src/
 │  └─ apexlab/
 │     ├─ __init__.py
+│     ├─ cli/
+│     │  ├─ __init__.py
+│     │  ├─ main.py
+│     │  ├─ compare.py
+│     │  └─ report.py
 │     ├─ py.typed
 │     ├─ datasets/
 │     │  ├─ __init__.py
@@ -215,6 +220,19 @@ Reserved fields:
 - package summary line
 - project classifiers
 - package keywords
+
+### CLI surface
+
+Status: `PARTIALLY DEFINED`
+
+Defining statements currently in force:
+
+- ApexLab exposes a console entry point named `apexlab`.
+- The currently defined lite CLI surface is limited to:
+   - `apexlab compare`
+   - `apexlab report`
+- The lite CLI surface exists to wrap already-implemented analysis/report functionality.
+- Full train/evaluate workflow coverage is not yet defined by this schematic.
 
 ### Source layout
 

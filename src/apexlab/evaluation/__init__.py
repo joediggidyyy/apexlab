@@ -1,5 +1,6 @@
 """Evaluation utilities for ApexLab."""
 
+from apexlab.evaluation.compare_report import build_compare_report
 from apexlab.evaluation.metrics import classification_metrics, regression_metrics
 from apexlab.evaluation.reports import render_markdown_report, utc_now_iso, write_reports
 from apexlab.evaluation.thresholds import (
@@ -14,6 +15,7 @@ from apexlab.evaluation.thresholds import (
 __all__ = [
 	"ThresholdEvaluationResult",
 	"binary_metrics",
+	"build_compare_report",
 	"choose_threshold",
 	"classification_metrics",
 	"confusion_counts",

@@ -1,6 +1,6 @@
 # ApexLab API Overview
 
-This document summarizes the currently implemented public Leg 1 surfaces.
+This document summarizes the currently implemented public ApexLab surfaces.
 
 ## Package root
 
@@ -39,6 +39,12 @@ This document summarizes the currently implemented public Leg 1 surfaces.
 - `classification_metrics(y_true, y_pred)`
 	- returns accuracy, labels, confusion matrix, and per-label report content
 
+## `apexlab.evaluation.compare_report`
+
+- `build_compare_report(comparison, *, generated_at_utc=None, inputs=None, context=None, code=None)`
+	- wraps a comparison payload into a stable report artifact with identity, inputs, interpretation, flags, and producer metadata
+	- intended to be the canonical comparison-report builder for the current Leg 2 reporting lane
+
 ## `apexlab.evaluation.thresholds`
 
 - `confusion_counts(y_true, y_pred)`
@@ -56,7 +62,7 @@ These helpers support both labeled threshold selection and unlabeled lower-tail 
 - `render_markdown_report(report)`
 - `write_reports(report, out_dir, *, stem='report')`
 
-These helpers write paired JSON and Markdown outputs for lightweight experiment summaries.
+These helpers write paired JSON and Markdown outputs for lightweight experiment summaries and now support richer comparison and regression reporting sections.
 
 ## `apexlab.utils.io`
 
@@ -69,3 +75,10 @@ These helpers write paired JSON and Markdown outputs for lightweight experiment 
 - `read_manifest(path)`
 
 These manifest helpers support small reproducible demo/report workflows.
+
+## Example validation and field-test surfaces
+
+- `examples/evaluation_demo.py`
+	- canonical **field test** surface for end-to-end package execution across current Leg 1 + Leg 2 lite functionality
+- `examples/reference_validation_run.py`
+	- canonical external reference-validation surface for comparison against SciPy / scikit-learn baselines

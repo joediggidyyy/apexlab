@@ -29,6 +29,28 @@ def test_render_markdown_report_includes_classification_matrix() -> None:
     assert "| true\\pred | a | b |" in rendered
 
 
+def test_render_markdown_report_supports_compare_reports() -> None:
+    report = {
+        "generated_at_utc": "2026-03-24T00:00:00Z",
+        "task": "compare",
+        "comparison": {
+            "labels": {"a": "baseline", "b": "candidate"},
+            "samples": {"n_a": 3, "n_b": 3},
+            "tests": {"mann_whitney_u": {"statistic": 0.0, "p_value": 0.1}},
+            "effect_size": {"cohens_d": {"cohens_d": 0.8, "effect_bucket": "large"}},
+            "direction": "candidate_mean_gt_baseline_mean",
+            "interpretation": "Candidate trends higher than baseline.",
+        },
+    }
+
+    rendered = render_markdown_report(report)
+
+    assert "Task: `compare`" in rendered
+    assert "## Interpretation" in rendered
+    assert "candidate_mean_gt_baseline_mean" in rendered
+    assert "## Statistical tests" in rendered
+
+
 def test_write_reports_writes_json_and_markdown_files(tmp_path: Path) -> None:
     report = {
         "generated_at_utc": "2026-03-22T00:00:00Z",

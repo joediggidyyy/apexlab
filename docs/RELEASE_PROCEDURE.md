@@ -1,45 +1,48 @@
 # ApexLab Release Procedure
 
-This note captures the final operator-executed flow for publishing the initial `1.0.0` ApexLab release.
+This note captures the final operator-executed flow for publishing the `1.1.0` ApexLab release.
 
 ## Current local verification state
 
 Already completed in this workspace:
 
-- package version locked to `1.0.0`
+- package version locked to `1.1.0`
 - focused ApexLab test suite passing
+- full ApexLab suite passing
+- field test executed successfully
+- analytical reference-validation documented
 - wheel and source distribution builds verified
 - wheel install smoke-tested
 - source distribution install smoke-tested
-- active `dist/` cleaned to only `1.0.0` artifacts
+- active `dist/` cleaned to only `1.1.0` artifacts
 
-## Important local repo note
+## Current local repo note
 
-As of 2026-03-22, the intended public repository exists at:
+As of 2026-03-25, the intended public repository exists at:
 
 - `https://github.com/joediggidyyy/apexlab`
 
-Within this workspace, `projects/apexlab/` is still present as a project lane inside `CodeSentinel-1` rather than as a standalone local clone of that public repository.
+Within this workspace, `projects/apexlab/` is a real git checkout with:
 
-That means the following must be performed in the actual public `apexlab` repository context before release publication:
+- `origin https://github.com/joediggidyyy/apexlab.git`
 
-- create the release tag there
-- publish the package artifacts through the chosen release flow
+That means build, tag, push, and publish can proceed directly from this checkout once the release gates are satisfied.
 
 ## Operator release flow
 
-1. Move into the standalone local clone of the intended public `apexlab` repository.
-2. Verify the repository remote points to `https://github.com/joediggidyyy/apexlab`.
-3. Confirm the synced `ApexLab 1.0.0` package contents are present on `main`.
-4. Run the package validation one more time in that standalone repo context if desired:
+1. Verify the repository remote points to `https://github.com/joediggidyyy/apexlab`.
+2. Confirm the intended `ApexLab 1.1.0` package contents are present on `main` or ready to be committed there.
+3. Run the package validation in the current repo context:
    - `python -m pytest tests`
    - `python -m build`
-5. Confirm the final `dist/` contains only:
-   - `apexlab-1.0.0-py3-none-any.whl`
-   - `apexlab-1.0.0.tar.gz`
-6. Create the release tag `v1.0.0`.
-7. Push the tag to the intended public remote.
-8. Publish the artifacts via the selected release channel.
+4. Confirm the final `dist/` contains only:
+   - `apexlab-1.1.0-py3-none-any.whl`
+   - `apexlab-1.1.0.tar.gz`
+5. Perform install smoke checks from the built artifacts.
+6. Commit and push the release-ready `1.1.0` tree to `main`.
+7. Create the release tag `v1.1.0`.
+8. Push the tag to the intended public remote.
+9. Publish the artifacts via the selected release channel.
 
 ## Suggested release payload surfaces
 
@@ -54,7 +57,8 @@ That means the following must be performed in the actual public `apexlab` reposi
 - `docs/INITIAL_RELEASE_SCOPE.md`
 - `docs/RELEASE_NOTES_DRAFT.md`
 - `docs/PUBLISH_CHECKLIST.md`
+- `docs/validation/REFERENCE_VALIDATION_20260324.md`
 
 ## Release decision summary
 
-`1.0.0` is intentionally lean. The correct goal for first publication is a clean, coherent, well-validated minimal package surface — not a maximal feature dump.
+`1.1.0` should remain intentionally lean even though it is broader than the initial package release. The correct goal is a clean, coherent, well-validated analytical/reporting package surface that public downstream consumers can install immediately.
