@@ -105,6 +105,7 @@ The `1.2.0` lane currently includes:
 
 ## More detail
 
+- `REFERENCE_VALIDATION_REPORT_20260324.md` — public-facing scientific write-up of the 2026-03-24 reference-validation run
 - `examples/reference_validation_run.py` — canonical external reference-validation runner for the current Leg 2 analytical lane
 - `examples/evaluation_demo.py` — canonical field-test surface for the current package lane
 - `tests/` — focused package validation surfaces
