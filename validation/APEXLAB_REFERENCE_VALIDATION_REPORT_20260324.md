@@ -1,15 +1,23 @@
 # ApexLab Reference Validation Report — 2026-03-24
 
+<p align="center">
+	<img src="../assets/apex_lab_logo.png" alt="ApexLab logo" width="160">
+</p>
+
+*ApexLab presents lightweight numerical tooling with transparent validation, practical reproducibility, and a reviewer-friendly analytical surface.*
+
 **Status:** Pass  
 **Consumer repo:** Calamum Moltbook Observer  
 **Canonical source repo:** ApexLab  
+**Validation landing page:** [validation/README.md](./README.md)  
 **Canonical validation runner:** `projects/apexlab/examples/reference_validation_run.py`  
 **Canonical machine-readable artifact:** `projects/apexlab/logs/metrics/reference_validation_20260324.json`  
-**Companion summary:** `local_untracked/reports/APEXLAB_REFERENCE_VALIDATION_SUMMARY_20260324.md`
+**Companion summary:** [APEXLAB_REFERENCE_VALIDATION_SUMMARY_20260324.md](./APEXLAB_REFERENCE_VALIDATION_SUMMARY_20260324.md)  
+**Browser-friendly summary:** [APEXLAB_REFERENCE_VALIDATION_SUMMARY_20260324.html](./APEXLAB_REFERENCE_VALIDATION_SUMMARY_20260324.html)
 
 ## Abstract
 
-This report documents the Observer-local interpretation of the 2026-03-24 ApexLab reference-validation run. The objective was to test whether the lightweight analytical surfaces now depended on by the Observer data-science lane remain numerically aligned with established reference implementations while preserving ApexLab's low-dependency design.
+This report documents the public-facing interpretation of the 2026-03-24 ApexLab reference-validation run. The objective was to test whether the lightweight analytical surfaces now depended on by the Observer data-science lane remain numerically aligned with established reference implementations while preserving ApexLab's low-dependency design.
 
 The validation run compared three capability groups against external baselines:
 
@@ -29,6 +37,14 @@ The thin summary file in this folder is useful for consumer-facing citation, but
 - the observed results,
 - the interpretation boundaries, and
 - the current Observer integration context.
+
+The presentation of this document is intentionally restrained: it keeps the validation story technical and transparent while using a small amount of branded visual structure so the report reads like a maintained publication rather than an internal scratch note.
+
+## Related public surfaces
+
+- [Validation landing page](./README.md)
+- [Reference validation summary](./APEXLAB_REFERENCE_VALIDATION_SUMMARY_20260324.md)
+- [Browser-friendly summary](./APEXLAB_REFERENCE_VALIDATION_SUMMARY_20260324.html)
 
 ## Validation question
 

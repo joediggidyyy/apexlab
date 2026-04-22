@@ -1,5 +1,11 @@
 # ApexLab
 
+<p align="center">
+	<img src="assets/apex_lab_logo.png" alt="ApexLab logo" width="180">
+</p>
+
+> Practical machine-learning utilities with a lightweight footprint, reproducible analysis surfaces, and publication-friendly evaluation output.
+
 ApexLab is a lean standalone Python package for practical machine-learning utilities.
 
 The current public package now spans a lean Leg 1 core plus an expanded Leg 2 analysis/model/reporting lane. ApexLab currently focuses on:
@@ -103,10 +109,16 @@ The `1.2.0` lane currently includes:
 - confirmed field-test execution via `examples/evaluation_demo.py`
 - a release workflow that can skip already-published files during reruns
 
-## More detail
+## Public validation reports
 
-- `REFERENCE_VALIDATION_REPORT_20260324.md` — public-facing scientific write-up of the 2026-03-24 reference-validation run
-- `examples/reference_validation_run.py` — canonical external reference-validation runner for the current Leg 2 analytical lane
-- `examples/evaluation_demo.py` — canonical field-test surface for the current package lane
-- `tests/` — focused package validation surfaces
-- `src/apexlab/` — current public implementation surface
+- [Validation directory overview](validation/README.md) — tracked landing page for public validation artifacts and supporting figures
+- [Reference validation summary](validation/APEXLAB_REFERENCE_VALIDATION_SUMMARY_20260324.md) — concise public-facing synopsis of the current reference-alignment posture
+- [Reference validation summary (HTML)](validation/APEXLAB_REFERENCE_VALIDATION_SUMMARY_20260324.html) — browser-friendly branded snapshot for quick review
+- [Detailed reference validation report](validation/APEXLAB_REFERENCE_VALIDATION_REPORT_20260324.md) — full scientific write-up of the 2026-03-24 validation run
+
+## More detail and implementation surfaces
+
+- [Reference validation runner](examples/reference_validation_run.py) — canonical external reference-validation runner for the current Leg 2 analytical lane
+- [Evaluation demo](examples/evaluation_demo.py) — canonical field-test surface for the current package lane
+- [Package tests](tests/) — focused package validation surfaces
+- [Implementation surface](src/apexlab/) — current public implementation surface
